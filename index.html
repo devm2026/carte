@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1A4329">
+  <title>Valley Coffee & More — Carte Digitale</title>
+
+  <!-- Tailwind CSS Play CDN (v3.4.1) for zero Setup, zero builds, instant client side compiling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Configure custom theme options for the Tailwind compiler on the fly -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            valley: {
+              green: '#1A4329',
+              greenLight: '#2E6B43',
+              gold: '#E6D5B8',
+              cream: '#F9F6EE',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Load Valley custom style file -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="min-h-screen text-gray-800 flex flex-col pb-24 scrollbar-none selection:bg-valley-green/10 selection:text-valley-green">
+
+  <!-- Main Root App Mount -->
+  <div id="root" class="w-full max-w-xl mx-auto flex flex-col min-h-screen relative">
+    
+    <!-- Skeleton loader display before scripts boot -->
+    <div id="init-loader" class="flex-1 flex flex-col items-center justify-center p-8 space-y-4">
+      <div class="w-12 h-12 rounded-full border-4 border-valley-green/20 border-t-valley-green animate-spin"></div>
+      <div class="text-center">
+        <h3 class="font-serif text-lg font-bold text-valley-green">Valley Coffee</h3>
+        <p class="text-xs text-gray-400 mt-1">Génération du menu numérique...</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Load JS Datastores and Core App Logic cleanly in sequential script tags -->
+  <script src="menuData.js"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>
