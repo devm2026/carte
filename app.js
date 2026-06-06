@@ -134,6 +134,13 @@ function render() {
   const rootElement = document.getElementById("root");
   if (!rootElement) return;
 
+  // Dynamically toggle body background color depending on view state for high contrast & clarity!
+  if (state.selectedCategory) {
+    document.body.className = "min-h-screen text-gray-100 bg-valley-productspagebg flex flex-col pb-24 scrollbar-none selection:bg-valley-gold/20 selection:text-valley-gold transition-colors duration-500";
+  } else {
+    document.body.className = "min-h-screen text-gray-900 bg-valley-cream flex flex-col pb-24 scrollbar-none selection:bg-valley-gold/20 selection:text-valley-gold transition-colors duration-500";
+  }
+
   const currentUrl = window.location.href;
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&color=1a4329&bgcolor=ffffff&data=${encodeURIComponent(
     currentUrl
@@ -144,19 +151,19 @@ function render() {
     <header class="sticky top-0 z-40 bg-valley-green text-valley-cream shadow-md">
       <div class="relative p-4 md:p-5 border-b border-valley-greenLight">
         <div class="absolute inset-2 border border-valley-gold/20 pointer-events-none rounded"></div>
-        <div class="relative flex justify-between items-center max-w-xl mx-auto px-1.55">
+        <div class="relative flex justify-between items-center max-w-xl mx-auto px-1.5">
           
           ${
             state.selectedCategory
               ? `
-            <button id="header-back-btn" class="flex items-center gap-1.5 py-1.5 px-3 rounded-full bg-black/20 hover:bg-black/30 transition-colors text-xs font-semibold text-valley-gold border border-valley-gold/30 cursor-pointer">
+            <button id="header-back-btn" class="flex items-center gap-1.5 py-1.5 px-3 rounded-full bg-black/30 hover:bg-black/45 transition-colors text-xs font-semibold text-valley-gold border border-valley-gold/30 cursor-pointer">
               ${getIconSvg("RotateCcw", "w-3.5 h-3.5")}
               <span>Retour</span>
             </button>
           `
               : `
             <div class="flex items-center gap-2">
-              <span class="p-1 rounded bg-valley-gold/10 text-valley-gold">
+              <span class="p-1 rounded bg-valley-gold/10 text-valley-gold font-sans font-semibold">
                 ${getIconSvg("Coffee", "w-4 h-4")}
               </span>
               <span class="text-[9px] uppercase tracking-widest text-valley-gold/70 font-mono">
@@ -167,18 +174,18 @@ function render() {
           }
 
           <div class="text-center flex-1 mx-3">
-            <h1 class="font-serif text-xl sm:text-2xl font-black tracking-wider leading-none text-valley-cream">
+            <h1 class="font-serif text-2xl sm:text-3xl font-black tracking-wider leading-none text-white">
               VALLEY
             </h1>
-            <p class="text-[8px] uppercase tracking-[0.25em] text-valley-gold mt-0.5 font-sans">
+            <p class="text-[9px] uppercase tracking-[0.25em] text-valley-gold mt-0.5 font-sans">
               COFFEE & MORE
             </p>
             ${
               state.selectedCategory
-                ? `<div class="inline-block mt-1 px-2.5 py-0.5 bg-valley-gold text-valley-green text-[9px] font-extrabold rounded-full uppercase tracking-wider">
+                ? `<div class="inline-block mt-1 px-3 py-1 bg-valley-gold text-valley-green text-[10px] font-black rounded-full uppercase tracking-wider">
                     ${state.selectedCategory.name}
                   </div>`
-                : `<span class="block italic text-[10px] font-sans text-valley-gold/90 mt-0.5">— Menu Numérique —</span>`
+                : `<span class="block italic text-[11px] font-sans text-valley-gold mt-0.5">— Menu Numérique —</span>`
             }
           </div>
 
@@ -203,7 +210,7 @@ function render() {
           type="text"
           placeholder="Rechercher un plat, ingrédient..."
           value="${state.searchQuery}"
-          class="w-full pl-9 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-valley-green focus:border-transparent transition-all shadow-xs"
+          class="w-full pl-9 pr-4 py-3 bg-white border border-valley-categorycardborder text-gray-900 rounded-xl text-sm placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-valley-gold focus:border-transparent transition-all shadow-md"
         />
       </div>
 
@@ -214,10 +221,10 @@ function render() {
             return `
             <button
               data-tag="${tag}"
-              class="tag-filter-button flex-shrink-0 text-[10px] font-extrabold px-3 py-1.5 rounded-full border transition-all cursor-pointer ${
+              class="tag-filter-button flex-shrink-0 text-xs font-bold px-3.5 py-2 rounded-full border transition-all cursor-pointer ${
                 isActive
-                  ? "bg-valley-green border-valley-green text-valley-cream shadow-sm"
-                  : "bg-white border-gray-200 text-gray-500 hover:bg-gray-50"
+                  ? "bg-valley-gold border-valley-gold text-gray-900 shadow-md font-extrabold"
+                  : "bg-white border-valley-categorycardborder text-gray-850 hover:bg-valley-greenLight/15"
               }"
             >
               ${tag}
@@ -236,12 +243,12 @@ function render() {
   if (state.searchQuery.trim() || state.activeTag) {
     // SEARCH RESULTS SCREEN ACTIVE
     mainContentHtml = `
-      <div class="space-y-4 animate-fade-in px-4">
+      <div class="space-y-6 animate-fade-in px-4">
         <div class="flex justify-between items-center px-1">
-          <h3 class="font-serif font-black text-xs text-valley-green uppercase tracking-wider">
+          <h3 class="font-serif font-black text-sm text-valley-gold uppercase tracking-wider">
             Recherche (${filteredProducts.length} résultats)
           </h3>
-          <button id="reset-filters-btn" class="text-[10px] font-bold text-amber-700 hover:underline cursor-pointer">
+          <button id="reset-filters-btn" class="text-xs font-bold text-amber-500 hover:underline cursor-pointer bg-transparent border-none">
             Réinitialiser
           </button>
         </div>
@@ -249,17 +256,17 @@ function render() {
         ${
           filteredProducts.length === 0
             ? `
-          <div class="p-10 bg-white rounded-2xl border border-gray-200 text-center text-xs text-gray-400">
+          <div class="p-10 bg-valley-productcardbg rounded-2xl border border-valley-productcardborder text-center text-sm text-gray-400">
             Aucun plat ne correspond à vos critères de recherche.
           </div>
         `
             : `
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             ${filteredProducts
               .map(
                 ({ product, category }) => `
               <div class="relative flex flex-col">
-                <span class="absolute top-2 left-2 z-10 text-[8px] uppercase tracking-widest font-mono font-bold bg-amber-500 text-white px-2 py-0.5 rounded shadow">
+                <span class="absolute top-2 left-2 z-10 text-[9px] uppercase tracking-widest font-mono font-bold bg-[#12281B] text-valley-cream border border-valley-gold/30 px-2.5 py-1 rounded shadow">
                   ${category.name}
                 </span>
                 ${renderProductCardHtml(product)}
@@ -275,10 +282,10 @@ function render() {
   } else if (!state.selectedCategory) {
     // FRONT CATEGORIES GRID DASHBOARD
     mainContentHtml = `
-      <div id="categories-container" class="space-y-5 animate-fade-in px-4">
+      <div id="categories-container" class="space-y-8 animate-fade-in px-4">
         
         <!-- Premium Welcome Card -->
-        <div class="relative p-5 bg-[#1F4E3D] text-white rounded-3xl overflow-hidden shadow-lg border border-emerald-800">
+        <div class="relative p-5 bg-[#1F4E3D] text-white rounded-3xl overflow-hidden shadow-lg border border-[#143527]">
           <div class="absolute inset-0 bg-gradient-to-r from-[#11311E] to-transparent pointer-events-none"></div>
           <div class="absolute inset-1.5 border border-[#E6D5B8]/35 pointer-events-none rounded-2xl"></div>
           
@@ -288,25 +295,25 @@ function render() {
               <span class="px-1.5 py-0.5 bg-amber-500 text-white font-mono text-[7px] font-black uppercase rounded">Directement Hébergé</span>
             </div>
             
-            <h2 class="font-serif text-sm font-black leading-snug">
+            <h2 class="font-serif text-base font-black leading-snug">
               Bienvenue chez Valley Coffee & More
             </h2>
-            <p class="text-[10px] text-gray-200 leading-relaxed max-w-sm">
+            <p class="text-xs text-gray-200 leading-relaxed max-w-sm">
               Naviguez à travers nos cartes, composez votre panier de commande et présentez-le directement au serveur pour une prise de commande immédiate !
             </p>
           </div>
         </div>
 
-        <div class="px-1 flex justify-between items-center">
-          <h3 class="font-serif text-xs font-extrabold uppercase tracking-widest text-valley-green">
+        <div class="px-1 flex justify-between items-center border-b border-valley-green/10 pb-2">
+          <h3 class="font-serif text-sm font-black uppercase tracking-widest text-valley-green">
             Catégories du Restaurant
           </h3>
-          <span class="text-[10px] text-gray-400 font-mono">
+          <span class="text-xs text-valley-green/70 font-mono font-bold">
             ${window.categories.length} Sections
           </span>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           ${window.categories.map((cat) => renderCategoryCardHtml(cat)).join("")}
         </div>
       </div>
@@ -316,9 +323,9 @@ function render() {
     const categoryProducts = state.selectedCategory.products.filter(matchesFilter);
 
     mainContentHtml = `
-      <div id="products-container" class="space-y-4 animate-fade-in px-4">
-        <button id="category-back-anchor" class="flex items-center gap-1 text-xs font-bold text-valley-green hover:underline cursor-pointer">
-          ${getIconSvg("ArrowLeft", "w-3.5 h-3.5")}
+      <div id="products-container" class="space-y-8 animate-fade-in px-4">
+        <button id="category-back-anchor" class="flex items-center gap-1.5 text-sm font-bold text-valley-gold hover:text-white transition-all cursor-pointer bg-transparent border-none">
+          ${getIconSvg("ArrowLeft", "w-4 h-4 text-valley-gold")}
           <span>Retour aux catégories</span>
         </button>
 
@@ -332,20 +339,20 @@ function render() {
           <div class="absolute inset-1.5 border border-white/20 pointer-events-none rounded-2xl"></div>
 
           <div class="relative z-10 space-y-1">
-            <h2 class="font-serif text-base font-black tracking-tight text-valley-cream">
+            <h2 class="font-serif text-xl sm:text-2xl font-black tracking-tight text-white mb-1">
               ${state.selectedCategory.name}
             </h2>
-            <p class="text-[10px] text-gray-200 leading-relaxed italic max-w-sm">
+            <p class="text-xs sm:text-sm text-gray-200 leading-normal italic max-w-sm">
               ${state.selectedCategory.description}
             </p>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           ${
             categoryProducts.length === 0
               ? `
-            <div class="col-span-full p-10 text-center bg-white border border-gray-200 rounded-2xl text-xs text-gray-400">
+            <div class="col-span-full p-10 text-center bg-valley-productcardbg border border-valley-productcardborder rounded-2xl text-sm text-gray-400 w-full">
               Aucun résultat pour cette catégorie de produits.
             </div>
           `
@@ -426,15 +433,15 @@ function renderCategoryCardHtml(category) {
   return `
     <button
       data-id="${category.id}"
-      class="category-grid-card relative flex flex-col w-full text-left bg-white rounded-2xl overflow-hidden border border-gray-200/60 shadow-xs active-card-feedback outline-none cursor-pointer group"
+      class="category-grid-card relative flex flex-col w-full text-left bg-valley-categorycardbg rounded-2xl overflow-hidden border border-valley-categorycardborder shadow-sm active-card-feedback outline-none cursor-pointer group hover:border-[#1A4329]/40 hover:shadow-md transition-all duration-200"
     >
       ${
         category.image
           ? `
-        <div class="relative h-24 w-full bg-gray-100 overflow-hidden">
-          <img src="${category.image}" alt="${category.name}" class="w-full h-full object-cover filter brightness-[0.7] group-hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
+        <div class="relative h-28 w-full bg-gray-900 overflow-hidden">
+          <img src="${category.image}" alt="${category.name}" class="w-full h-full object-cover filter brightness-[0.85] group-hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
           <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-          <span class="absolute top-2 right-2 text-[9px] font-bold bg-valley-green text-valley-cream px-2 py-0.5 rounded-full font-mono">
+          <span class="absolute top-2 right-2 text-[10px] font-black bg-[#12281B] text-valley-cream px-2.5 py-1 rounded-full font-mono shadow-md">
             ${category.products.length} Choix
           </span>
         </div>
@@ -442,20 +449,20 @@ function renderCategoryCardHtml(category) {
           : ""
       }
 
-      <div class="p-3.5 flex-1 flex flex-col justify-between">
+      <div class="p-4 flex-1 flex flex-col justify-between">
         <div>
-          <div class="flex items-center gap-1.5 mb-1">
-            <span class="p-1 rounded-md bg-[#1A4329]/10 text-valley-green">
-              ${getIconSvg(category.icon, "w-4 h-4")}
+          <div class="flex items-center gap-2 mb-1.5">
+            <span class="p-1.5 rounded-md bg-valley-green/5 text-valley-gold border border-valley-gold/20">
+              ${getIconSvg(category.icon, "w-4 h-4 text-valley-gold")}
             </span>
-            <h4 class="font-serif text-sm font-bold text-gray-800">${category.name}</h4>
+            <h4 class="font-serif text-lg font-black text-valley-gold group-hover:text-amber-850 transition-colors uppercase tracking-wider">${category.name}</h4>
           </div>
-          <p class="text-[11px] text-gray-500 leading-normal line-clamp-2 italic">${category.description}</p>
+          <p class="text-xs sm:text-sm text-gray-650 leading-relaxed line-clamp-2 italic mb-1">${category.description}</p>
         </div>
 
-        <div class="flex items-center justify-between mt-2 pt-2 border-t border-gray-50 text-[10px] font-bold text-valley-green">
-          <span>Consulter les choix</span>
-          ${getIconSvg("ChevronRight", "w-3 h-3")}
+        <div class="flex items-center justify-between mt-3 pt-2 w-full border-t border-valley-categorycardborder text-xs font-bold text-[#12281B] group-hover:underline">
+          <span>Consulter la carte</span>
+          ${getIconSvg("ChevronRight", "w-3.5 h-3.5 text-[#12281B]")}
         </div>
       </div>
     </button>
@@ -468,19 +475,45 @@ function renderProductCardHtml(product) {
   const isMultiPrice = product.priceMedium !== undefined && product.priceGrande !== undefined;
 
   return `
-    <div class="p-4 bg-white rounded-2xl border border-gray-200/70 shadow-xs flex flex-col justify-between min-h-[160px] hover:border-[#1A4329]/30 transition-all duration-200">
-      <div>
-        <div class="flex justify-between items-start gap-1">
-          <h4 class="font-serif font-extrabold text-valley-green text-xs leading-snug tracking-tight">
+    <div class="p-3 bg-valley-productcardbg rounded-xl border border-valley-productcardborder shadow-sm flex flex-col gap-1.5 hover:border-valley-gold/40 transition-all duration-200">
+      <div class="flex items-center justify-between gap-3">
+        <!-- Name and Price on the Left (inline/flex) -->
+        <div class="flex items-baseline gap-2 flex-wrap flex-1 min-w-0">
+          <h4 class="font-sans font-bold text-white text-sm sm:text-base tracking-wide uppercase truncate max-w-[200px] sm:max-w-[280px]">
             ${product.name}
           </h4>
-          <button data-prod-id="${product.id}" class="favorite-toggle-btn p-1.5 rounded-full cursor-pointer transition-colors ${
-            isFav ? "bg-amber-100 text-amber-600" : "bg-gray-50 text-gray-300 hover:text-gray-400"
-          }">
-            ${getIconSvg("Star", "w-3 h-3")}
-          </button>
+          <span class="text-sm font-black text-valley-gold font-mono whitespace-nowrap">
+            ${isMultiPrice ? `${product.priceMedium} / ${product.priceGrande} DH` : `${product.price} DH`}
+          </span>
+          ${isMultiPrice ? `<span class="text-[9px] text-gray-400 font-mono uppercase font-semibold">(Moy / Grd)</span>` : ""}
         </div>
 
+        <!-- Favorite & Square Plus on the Right -->
+        <div class="flex items-center gap-1.5 flex-shrink-0">
+          <button data-prod-id="${product.id}" class="favorite-toggle-btn p-1.5 rounded-lg cursor-pointer transition-all border ${
+            isFav ? "bg-amber-500/20 text-amber-400 border border-amber-400/30" : "bg-black/20 text-gray-400 hover:text-gray-300 border-transparent"
+          }">
+            ${getIconSvg("Star", isFav ? "w-3.5 h-3.5 fill-amber-400" : "w-3.5 h-3.5")}
+          </button>
+
+          <button data-id="${product.id}" class="add-customizer-btn flex items-center justify-center w-8 h-8 rounded-lg bg-valley-greenLight text-white border border-valley-gold/30 hover:bg-valley-green hover:text-valley-gold hover:border-valley-gold active:scale-95 cursor-pointer transition-all shadow-sm">
+            ${getIconSvg("Plus", "w-4 h-4 text-valley-gold")}
+          </button>
+        </div>
+      </div>
+
+      <!-- Details at the Bottom -->
+      <div class="space-y-1">
+        ${
+          product.composition
+            ? `<p class="text-[11px] sm:text-xs text-gray-300 leading-relaxed italic">${product.composition}</p>`
+            : ""
+        }
+        ${
+          product.extraInfo
+            ? `<span class="block text-[9px] text-amber-400 font-extrabold uppercase tracking-wider">${product.extraInfo}</span>`
+            : ""
+        }
         ${
           product.tags && product.tags.length > 0
             ? `
@@ -488,7 +521,7 @@ function renderProductCardHtml(product) {
             ${product.tags
               .map(
                 (tag) => `
-              <span class="text-[8px] font-bold px-1.5 py-0.5 rounded bg-valley-green/5 text-valley-green uppercase tracking-wider">${tag}</span>
+              <span class="text-[8px] font-bold px-1.5 py-0.5 rounded-md bg-valley-gold/10 text-valley-gold border border-valley-gold/25 uppercase tracking-wider">${tag}</span>
             `
               )
               .join("")}
@@ -496,42 +529,6 @@ function renderProductCardHtml(product) {
         `
             : ""
         }
-
-        ${
-          product.composition
-            ? `<p class="text-[11px] text-gray-500 mt-1.5 leading-normal italic">${product.composition}</p>`
-            : ""
-        }
-        ${
-          product.extraInfo
-            ? `<span class="block mt-1 text-[8px] text-amber-800 font-extrabold uppercase mt-0.5">${product.extraInfo}</span>`
-            : ""
-        }
-      </div>
-
-      <div class="flex items-center justify-between mt-3 pt-2.5 border-t border-gray-50">
-        <div>
-          ${
-            isMultiPrice
-              ? `
-            <div class="flex flex-col">
-              <span class="text-[8px] text-gray-400 font-mono uppercase">Moy / Grd</span>
-              <span class="text-[10px] font-black text-valley-green font-mono">${product.priceMedium} / ${product.priceGrande} DH</span>
-            </div>
-          `
-              : `
-            <div class="flex flex-col">
-              <span class="text-[8px] text-gray-400 font-mono uppercase">Prix</span>
-              <span class="text-xs font-black text-gray-800 font-mono">${product.price} DH</span>
-            </div>
-          `
-          }
-        </div>
-
-        <button data-id="${product.id}" class="add-customizer-btn flex items-center gap-1.5 py-1 px-2.5 rounded-full text-[10px] font-extrabold bg-gray-100 text-gray-700 hover:bg-valley-green/10 active:scale-95 cursor-pointer transition-all">
-          ${getIconSvg("Plus", "w-3 h-3")}
-          <span>${isMultiPrice ? "Choisir" : "Ajouter"}</span>
-        </button>
       </div>
     </div>
   `;
@@ -557,6 +554,7 @@ function renderBasketSheetHtml() {
     if (item.selectedExtra === "+fromage") extraCost += 5;
     if (item.selectedExtra === "+frites") extraCost += 10;
     if (item.selectedExtra === "+glace") extraCost += 10;
+    if (item.selectedExtra === "+verre_lait") extraCost += 5;
 
     return sum + (price + extraCost) * item.quantity;
   }, 0);
@@ -626,6 +624,9 @@ function renderBasketSheetHtml() {
                   } else if (item.selectedExtra === "+glace") {
                     extraCost += 10;
                     extraLabel = "+ Supp. Boule de glace (+10 DH)";
+                  } else if (item.selectedExtra === "+verre_lait") {
+                    extraCost += 5;
+                    extraLabel = "+ Grand verre de lait (+5 DH)";
                   }
 
                   const rowTotal = (price + extraCost) * item.quantity;
@@ -706,6 +707,7 @@ function updateCustomizerTotal() {
   if (state.customSelectedExtra === "+fromage") extra += 5;
   if (state.customSelectedExtra === "+frites") extra += 10;
   if (state.customSelectedExtra === "+glace") extra += 10;
+  if (state.customSelectedExtra === "+verre_lait") extra += 5;
 
   const totalSpan = document.getElementById("customizer-calculated-total");
   if (totalSpan) {
@@ -739,8 +741,8 @@ function renderCustomizerModalHtml() {
             prod.composition
               ? `
             <div class="bg-white rounded-xl p-3 border border-gray-150">
-              <span class="text-[9px] text-gray-400 uppercase tracking-widest font-mono font-bold block mb-1">Ingrédients de base</span>
-              <p class="text-[11px] text-gray-500 italic leading-relaxed">${prod.composition}</p>
+               <span class="text-[9px] text-gray-500 uppercase tracking-widest font-mono font-bold block mb-1">Ingrédients de base</span>
+               <p class="text-[11px] text-gray-500 italic leading-relaxed">${prod.composition}</p>
             </div>
           `
               : ""
@@ -774,10 +776,13 @@ function renderCustomizerModalHtml() {
               : ""
           }
 
+          ${
+            (prod.id.startsWith("b_") || prod.id.startsWith("d_") || prod.id.startsWith("gl_"))
+              ? `
           <div class="space-y-1.5">
             <label class="text-[10px] font-bold text-gray-600 block uppercase tracking-wider">Choix Supplémentaire</label>
             <div class="space-y-2">
-              <label class="flex items-center justify-between p-2.5 rounded-xl border border-gray-200 bg-white text-xs cursor-pointer hover:bg-gray-50">
+              <label class="flex items-center justify-between p-2.5 rounded-xl border border-gray-200 bg-white text-xs cursor-pointer hover:bg-gray-50 flex-row">
                 <div class="flex items-center gap-2">
                   <input type="radio" name="custom-extra" id="extra-none" ${!state.customSelectedExtra ? "checked" : ""} class="text-valley-green focus:ring-valley-green" />
                   <span class="text-gray-700 font-bold">Sans extra</span>
@@ -788,14 +793,14 @@ function renderCustomizerModalHtml() {
               ${
                 prod.id.startsWith("b_")
                   ? `
-                <label class="flex items-center justify-between p-2.5 rounded-xl border border-gray-200 bg-white text-xs cursor-pointer hover:bg-gray-50">
+                <label class="flex items-center justify-between p-2.5 rounded-xl border border-gray-200 bg-white text-xs cursor-pointer hover:bg-gray-50 flex-row">
                   <div class="flex items-center gap-2">
                     <input type="radio" name="custom-extra" id="extra-beurre" ${state.customSelectedExtra === "+beurre" ? "checked" : ""} class="text-valley-green focus:ring-valley-green" />
                     <span class="text-gray-700">Portion de Beurre Extra</span>
                   </div>
                   <span class="text-valley-green font-bold font-mono">+3 DH</span>
                 </label>
-                <label class="flex items-center justify-between p-2.5 rounded-xl border border-gray-200 bg-white text-xs cursor-pointer hover:bg-gray-50">
+                <label class="flex items-center justify-between p-2.5 rounded-xl border border-gray-200 bg-white text-xs cursor-pointer hover:bg-gray-50 flex-row">
                   <div class="flex items-center gap-2">
                     <input type="radio" name="custom-extra" id="extra-fromage" ${state.customSelectedExtra === "+fromage" ? "checked" : ""} class="text-valley-green focus:ring-valley-green" />
                     <span class="text-gray-700">Fromage ou Option Huile</span>
@@ -807,27 +812,13 @@ function renderCustomizerModalHtml() {
               }
 
               ${
-                !prod.id.startsWith("b_") && !prod.id.startsWith("gl_") && !prod.id.startsWith("d_")
-                  ? `
-                <label class="flex items-center justify-between p-2.5 rounded-xl border border-gray-200 bg-white text-xs cursor-pointer hover:bg-gray-50">
-                  <div class="flex items-center gap-2">
-                    <input type="radio" name="custom-extra" id="extra-frites" ${state.customSelectedExtra === "+frites" ? "checked" : ""} class="text-valley-green focus:ring-valley-green" />
-                    <span class="text-gray-700">Portion frites chaudes</span>
-                  </div>
-                  <span class="text-valley-green font-bold font-mono">+10 DH</span>
-                </label>
-              `
-                  : ""
-              }
-
-              ${
                 prod.id.startsWith("d_") || prod.id.startsWith("gl_")
                   ? `
-                <label class="flex items-center justify-between p-2.5 rounded-xl border border-gray-200 bg-white text-xs cursor-pointer hover:bg-gray-50">
+                <label class="flex items-center justify-between p-2.5 rounded-xl border border-gray-200 bg-white text-xs cursor-pointer hover:bg-gray-50 flex-row">
                   <div class="flex items-center gap-2">
                     <input type="radio" name="custom-extra" id="extra-glace" ${state.customSelectedExtra === "+glace" ? "checked" : ""} class="text-valley-green focus:ring-valley-green" />
                     <span class="text-gray-700">Boule de glace Oliveri</span>
-                  </div>
+                   </div>
                   <span class="text-valley-green font-bold font-mono">+10 DH</span>
                 </label>
               `
@@ -835,6 +826,73 @@ function renderCustomizerModalHtml() {
               }
             </div>
           </div>
+          `
+              : ""
+          }
+
+          ${
+            prod.id === "p_couscous"
+              ? `
+            <div class="p-4 bg-amber-50 rounded-2xl border border-amber-200 flex flex-col gap-3">
+              <div class="flex items-center gap-2.5">
+                <span class="text-2xl">🥛</span>
+                <div>
+                  <span class="text-[9px] font-bold text-amber-800 uppercase tracking-widest font-mono block">Option Couscous</span>
+                  <label class="text-xs font-black text-gray-800">Voulez-vous accompagner le Couscous d'un grand verre de lait ?</label>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-3 mt-1">
+                <button type="button" id="milk-none-btn" class="customizer-milk-btn py-2.5 px-3 rounded-xl border text-center text-xs font-bold transition-all cursor-pointer ${
+                  state.customSelectedExtra !== "+verre_lait"
+                    ? "border-amber-600 bg-amber-600 text-white shadow-sm"
+                    : "border-gray-200 bg-white text-gray-700 hover:bg-gray-50"
+                }">
+                  Non, merci
+                </button>
+                <button type="button" id="milk-yes-btn" class="customizer-milk-btn py-2.5 px-3 rounded-xl border text-center text-xs font-bold transition-all cursor-pointer ${
+                  state.customSelectedExtra === "+verre_lait"
+                    ? "border-amber-600 bg-amber-600 text-white shadow-sm"
+                    : "border-gray-200 bg-white text-gray-700 hover:bg-gray-50"
+                }">
+                  Oui, Verre de lait (+5 DH)
+                </button>
+              </div>
+            </div>
+            `
+              : ""
+          }
+
+          ${
+            (!prod.id.startsWith("b_") && !prod.id.startsWith("gl_") && !prod.id.startsWith("d_") && !prod.id.startsWith("j_") && !prod.id.startsWith("c_") && !prod.id.startsWith("m_") && prod.id !== "p_couscous")
+              ? `
+            <div class="p-4 bg-amber-50 rounded-2xl border border-amber-200 flex flex-col gap-3">
+              <div class="flex items-center gap-2.5">
+                <span class="text-2xl">🍟</span>
+                <div>
+                  <span class="text-[9px] font-bold text-amber-800 uppercase tracking-widest font-mono block font-sans">Garniture</span>
+                  <label class="text-xs font-black text-gray-800">Voulez-vous ajouter une portion de frites ou non ?</label>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-3 mt-1">
+                <button type="button" id="frites-none-btn" class="customizer-frites-btn py-2.5 px-3 rounded-xl border text-center text-xs font-bold transition-all cursor-pointer ${
+                  state.customSelectedExtra !== "+frites"
+                    ? "border-amber-600 bg-amber-600 text-white shadow-sm"
+                    : "border-gray-200 bg-white text-gray-700 hover:bg-gray-50"
+                }">
+                  Non, merci
+                </button>
+                <button type="button" id="frites-yes-btn" class="customizer-frites-btn py-2.5 px-3 rounded-xl border text-center text-xs font-bold transition-all cursor-pointer ${
+                  state.customSelectedExtra === "+frites"
+                    ? "border-amber-600 bg-amber-600 text-white shadow-sm"
+                    : "border-gray-200 bg-white text-gray-700 hover:bg-gray-50"
+                }">
+                  Oui, frites (+10 DH)
+                </button>
+              </div>
+            </div>
+            `
+              : ""
+          }
         </div>
 
         <div class="p-4 bg-white border-t border-gray-200 flex items-center justify-between gap-4">
@@ -1036,6 +1094,42 @@ function bindEventListeners() {
   if (radioGlace) {
     radioGlace.addEventListener("change", () => {
       state.customSelectedExtra = "+glace";
+      updateCustomizerTotal();
+    });
+  }
+
+  // Custom question buttons for milk
+  const milkNoneBtn = document.getElementById("milk-none-btn");
+  if (milkNoneBtn) {
+    milkNoneBtn.addEventListener("click", () => {
+      state.customSelectedExtra = null;
+      render();
+      updateCustomizerTotal();
+    });
+  }
+  const milkYesBtn = document.getElementById("milk-yes-btn");
+  if (milkYesBtn) {
+    milkYesBtn.addEventListener("click", () => {
+      state.customSelectedExtra = "+verre_lait";
+      render();
+      updateCustomizerTotal();
+    });
+  }
+
+  // Custom question buttons for frites
+  const fritesNoneBtn = document.getElementById("frites-none-btn");
+  if (fritesNoneBtn) {
+    fritesNoneBtn.addEventListener("click", () => {
+      state.customSelectedExtra = null;
+      render();
+      updateCustomizerTotal();
+    });
+  }
+  const fritesYesBtn = document.getElementById("frites-yes-btn");
+  if (fritesYesBtn) {
+    fritesYesBtn.addEventListener("click", () => {
+      state.customSelectedExtra = "+frites";
+      render();
       updateCustomizerTotal();
     });
   }

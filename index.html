@@ -16,10 +16,16 @@
         extend: {
           colors: {
             valley: {
-              green: '#1A4329',
-              greenLight: '#2E6B43',
-              gold: '#E6D5B8',
-              cream: '#F9F6EE',
+              green: '#12281B', // Dark emerald
+              greenLight: '#1A4329', // Leaf gold green
+              gold: '#C29B53', // Warm high legibility gold
+              cream: '#E2D9C3', // Warm cream light color (slightly darker for superb cozy feel)
+              darkbg: '#0a120d', // Deeper carbon forest-black for categories overview page
+              productspagebg: '#0c1a12', // Darker forest page backplane for products list
+              categorycardbg: '#ffffff', // Clean white card background for plano light category cards
+              categorycardborder: '#E8DFCC', // Soft elegant golden-sand border for categories
+              productcardbg: '#14251c', // Crisp dark jade-ceramic container for products
+              productcardborder: '#1f3829', // Perfect contrast leaf border for products
             }
           },
           fontFamily: {
@@ -35,17 +41,17 @@
   <!-- Load Valley custom style file -->
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="min-h-screen text-gray-800 flex flex-col pb-24 scrollbar-none selection:bg-valley-green/10 selection:text-valley-green">
+<body class="min-h-screen text-gray-100 bg-valley-darkbg flex flex-col pb-24 scrollbar-none selection:bg-valley-gold/20 selection:text-valley-gold transition-colors duration-500">
 
   <!-- Main Root App Mount -->
   <div id="root" class="w-full max-w-xl mx-auto flex flex-col min-h-screen relative">
     
     <!-- Skeleton loader display before scripts boot -->
     <div id="init-loader" class="flex-1 flex flex-col items-center justify-center p-8 space-y-4">
-      <div class="w-12 h-12 rounded-full border-4 border-valley-green/20 border-t-valley-green animate-spin"></div>
+      <div class="w-12 h-12 rounded-full border-4 border-valley-green/20 border-t-valley-gold animate-spin"></div>
       <div class="text-center">
-        <h3 class="font-serif text-lg font-bold text-valley-green">Valley Coffee</h3>
-        <p class="text-xs text-gray-400 mt-1">Génération du menu numérique...</p>
+        <h3 class="font-serif text-xl font-bold text-valley-gold">Valley Coffee</h3>
+        <p class="text-xs text-gray-450 mt-1">Génération du menu numérique...</p>
       </div>
     </div>
 
